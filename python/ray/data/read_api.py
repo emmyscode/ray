@@ -2288,7 +2288,8 @@ def from_torch(
     `Torch Dataset <https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset/>`_.
 
     .. note::
-        The dataset must be serializable.
+        The input dataset can either be map-style or iterable-style, and can have arbitrarily large amount of data.
+        The data will be sequentially streamed with one single read task.
 
     Examples:
         >>> import ray
@@ -2317,6 +2318,7 @@ def from_torch(
     return read_datasource(
         TorchDatasource(),
         dataset=dataset,
+        # Only non-parallel, streaming read is currently supported
         parallelism=1,
         ray_remote_args=ray_remote_args,
     )
